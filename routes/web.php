@@ -56,3 +56,12 @@ Route::get('/pegawai/edit/{id}','App\Http\Controllers\PegawaiControllerDB@edit')
 Route::post('/pegawai/update','App\Http\Controllers\PegawaiControllerDB@update');
 Route::get('/pegawai/hapus/{id}','App\Http\Controllers\PegawaiControllerDB@hapus');
 Route::get('/pegawai/cari','App\Http\Controllers\PegawaiControllerDB@cari');
+
+Route::get('/minuman','App\Http\Controllers\MinumanController@indexminum');
+Route::post('/minuman/ubahtersedia/{id}', 'App\Http\Controllers\MinumanController@ubahTersedia');
+Route::get('/minuman/tambah', 'App\Http\Controllers\MinumanController@tambah');
+Route::post('/minuman/store', 'App\Http\Controllers\MinumanController@store');
+Route::post('/minuman/update', 'App\Http\Controllers\MinumanController@update');
+Route::get('/minuman/edit/{id}', 'App\Http\Controllers\MinumanController@edit');
+Route::get('/minuman/hapus/{id}', 'App\Http\Controllers\MinumanController@hapus');
+Route::get('/minuman/cari', 'App\Http\Controllers\MinumanController@cari');
