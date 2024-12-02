@@ -49,6 +49,10 @@ Route::get('/UTS', function () {
     return view('UTS');
 });
 
+Route::get('/', function () {
+    return view('hitung');
+});
+
 Route::get('/pegawai','App\Http\Controllers\PegawaiControllerDB@index');
 Route::get('/pegawai/tambah','App\Http\Controllers\PegawaiControllerDB@tambah');
 Route::post('/pegawai/store','App\Http\Controllers\PegawaiControllerDB@store');
