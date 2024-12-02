@@ -17,110 +17,85 @@ class MinumanController extends Controller
     // Menampilkan form tambah data minuman
     public function tambah()
     {
-        // Memanggil view tambah
         return view('tambahminum');
     }
 
     // Menyimpan data minuman baru
     public function store(Request $request)
-{
-    // Debugging: Cek data yang diterima
-    logger()->info('Data diterima untuk store:', $request->all());
+    {
+        // Debugging: Cek data yang diterima
+        logger()->info('Data diterima untuk store:', $request->all());
 
-    // Validasi input
-    $request->validate([
-        'kodeminuman' => 'required|max:10|unique:minuman',
-        'merkminuman' => 'required|max:50',
-        'stockminuman' => 'required|integer|min:0',
-        'tersedia' => 'required|in:Y,N'
-    ]);
+        // Validasi input
+        $request->validate([
+            'kodeminuman' => 'required|max:10|unique:minuman',
+            'merkminuman' => 'required|max:50',
+            'stockminuman' => 'required|integer|min:0',
+        ]);
 
-    // Menyimpan data ke database
-    DB::table('minuman')->insert([
-        'kodeminuman' => $request->kodeminuman,
-        'merkminuman' => $request->merkminuman,
-        'stockminuman' => $request->stockminuman,
-        'tersedia' => $request->tersedia
-    ]);
+        // Tentukan nilai "tersedia" berdasarkan stok
+        $tersedia = $request->stockminuman > 0 ? 'Y' : 'N';
 
-    // Debugging: Pastikan data berhasil ditambahkan
-    logger()->info('Data berhasil ditambahkan:', [
-        'kodeminuman' => $request->kodeminuman
-    ]);
+        // Menyimpan data ke database
+        DB::table('minuman')->insert([
+            'kodeminuman' => $request->kodeminuman,
+            'merkminuman' => $request->merkminuman,
+            'stockminuman' => $request->stockminuman,
+            'tersedia' => $tersedia,
+        ]);
 
-    // Redirect ke halaman daftar minuman
-    return redirect('/minuman')->with('success', 'Data berhasil ditambahkan!');
-}
+        logger()->info('Data berhasil ditambahkan:', [
+            'kodeminuman' => $request->kodeminuman,
+        ]);
+
+        return redirect('/minuman')->with('success', 'Data berhasil ditambahkan!');
+    }
 
     // Menampilkan form edit data minuman
     public function edit($id)
     {
-        // Mengambil data minuman berdasarkan kode
         $minuman = DB::table('minuman')->where('kodeminuman', '=', $id)->get();
-
-        // Mengirim data minuman ke view edit
         return view('editminum', ['minuman' => $minuman]);
     }
 
     // Memperbarui data minuman
     public function update(Request $request)
     {
+        // Debugging: Tampilkan data yang diterima
+        logger()->info('Data diterima untuk update:', $request->all());
+
         // Validasi input
         $request->validate([
             'kodeminuman' => 'required|max:10',
             'merkminuman' => 'required|max:50',
             'stockminuman' => 'required|integer|min:0',
-            'tersedia' => 'required|in:Y,N'
         ]);
+
+        // Tentukan nilai "tersedia" berdasarkan stok
+        $tersedia = $request->stockminuman > 0 ? 'Y' : 'N';
 
         // Memperbarui data minuman
         DB::table('minuman')->where('kodeminuman', $request->kodeminuman)->update([
             'merkminuman' => $request->merkminuman,
             'stockminuman' => $request->stockminuman,
-            'tersedia' => $request->tersedia
+            'tersedia' => $tersedia,
         ]);
 
-        // Mengarahkan ke halaman daftar minuman
+        logger()->info('Data berhasil diperbarui untuk kodeminuman:', ['kodeminuman' => $request->kodeminuman]);
+
         return redirect('/minuman')->with('success', 'Data berhasil diperbarui!');
-
-        // Debugging: Tampilkan semua data yang diterima
-    logger()->info('Data diterima untuk update:', $request->all());
-
-    // Validasi input
-    $request->validate([
-        'kodeminuman' => 'required|max:10',
-        'merkminuman' => 'required|max:50',
-        'stockminuman' => 'required|integer|min:0',
-        'tersedia' => 'required|in:Y,N'
-    ]);
-
-    // Memperbarui data minuman
-    DB::table('minuman')->where('kodeminuman', $request->kodeminuman)->update([
-        'merkminuman' => $request->merkminuman,
-        'stockminuman' => $request->stockminuman,
-        'tersedia' => $request->tersedia
-    ]);
-
-    // Debugging: Tampilkan pesan sukses
-    logger()->info('Data berhasil diperbarui untuk kodeminuman:', ['kodeminuman' => $request->kodeminuman]);
-
-    return redirect('/minuman')->with('success', 'Data berhasil diperbarui!');
-}
+    }
 
     // Menghapus data minuman
     public function hapus($id)
     {
-        // Menghapus data minuman berdasarkan kode
         DB::table('minuman')->where('kodeminuman', $id)->delete();
-
-        // Mengarahkan ke halaman daftar minuman
         return redirect('/minuman')->with('success', 'Data berhasil dihapus!');
     }
 
     // Mengubah status "tersedia"
     public function ubahTersedia(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
             'tersedia' => 'required|in:Y,N'
         ]);
@@ -132,18 +107,15 @@ class MinumanController extends Controller
         return response()->json(['success' => true, 'message' => 'Status tersedia berhasil diubah!']);
     }
 
+    // Pencarian data minuman
     public function cari(Request $request)
-{
-    // Ambil input pencarian
-    $cari = $request->input('cari');
+    {
+        $cari = $request->input('cari');
 
-    // Query data minuman berdasarkan merk minuman
-    $minuman = DB::table('minuman')
-        ->where('merkminuman', 'like', '%' . $cari . '%')
-        ->paginate(10);
+        $minuman = DB::table('minuman')
+            ->where('merkminuman', 'like', '%' . $cari . '%')
+            ->paginate(10);
 
-    // Kirim data ke view
-    return view('indexminum', ['minuman' => $minuman]);
-}
-
+        return view('indexminum', ['minuman' => $minuman]);
+    }
 }
