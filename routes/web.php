@@ -50,7 +50,7 @@ Route::get('/UTS', function () {
 });
 
 Route::get('/', function () {
-    return view('hitung');
+    return view('index2');
 });
 
 Route::get('/pegawai','App\Http\Controllers\PegawaiControllerDB@index');
@@ -69,3 +69,5 @@ Route::post('/minuman/update', 'App\Http\Controllers\MinumanController@update');
 Route::get('/minuman/edit/{id}', 'App\Http\Controllers\MinumanController@edit');
 Route::get('/minuman/hapus/{id}', 'App\Http\Controllers\MinumanController@hapus');
 Route::get('/minuman/cari', 'App\Http\Controllers\MinumanController@cari');
+
+Route::get('/counter' , 'App\Http\Controllers\counterController@index2');
