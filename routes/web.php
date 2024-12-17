@@ -71,3 +71,6 @@ Route::get('/minuman/hapus/{id}', 'App\Http\Controllers\MinumanController@hapus'
 Route::get('/minuman/cari', 'App\Http\Controllers\MinumanController@cari');
 
 Route::get('/counter' , 'App\Http\Controllers\counterController@index2');
+
+Route::get('/UAS', 'App\Http\Controllers\UASController@index');
+Route::get('/UAS/edit/{id}','App\Http\Controllers\UASController@edit');

@@ -27,7 +27,7 @@
           <a class="nav-link" href="/minuman">Minuman</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/eas">EAS</a>
+          <a class="nav-link" href="/UAS">UAS</a>
         </li>
       </ul>
     </div>
